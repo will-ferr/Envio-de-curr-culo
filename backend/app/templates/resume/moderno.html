@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ contact.name }} — {{ headline }}</title>
+<style>
+  /* Template "Moderno": cabeçalho com faixa de cor, ainda em fluxo de uma coluna (compatível com ATS). */
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  body { font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif; font-size: 9.8pt; color: #1f2937;
+         line-height: 1.42; margin: 0; }
+  header { background: #0f172a; color: #fff; padding: 16mm 16mm 9mm; }
+  h1 { font-size: 22pt; margin: 0; font-weight: 700; letter-spacing: -.2px; }
+  .headline { color: #f59e0b; font-size: 11.5pt; font-weight: 600; margin-top: 2px; }
+  .contact { color: #cbd5e1; font-size: 8.6pt; margin-top: 6px; }
+  .contact span + span::before { content: "  ·  "; white-space: pre; }
+  main { padding: 6mm 16mm 14mm; }
+  h2 { font-size: 10pt; text-transform: uppercase; letter-spacing: 1px; color: #b45309;
+       margin: 12px 0 5px; break-after: avoid; }
+  p { margin: 0; }
+  ul { margin: 3px 0 0; padding-left: 16px; }
+  li { margin-bottom: 2px; }
+  .muted { color: #6b7280; }
+  .item { break-inside: avoid; margin-top: 6px; }
+  .role { font-weight: 600; }
+  .chips { display: flex; flex-wrap: wrap; gap: 4px 6px; }
+  .chip { border: 1px solid #e5e7eb; border-radius: 10px; padding: 1px 8px; font-size: 8.8pt; }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ contact.name }}</h1>
+  {% if headline %}<div class="headline">{{ headline }}</div>{% endif %}
+  <div class="contact">
+    {% if contact.location %}<span>{{ contact.location }}</span>{% endif %}
+    {% if contact.phone %}<span>{{ contact.phone }}</span>{% endif %}
+    {% if contact.email %}<span>{{ contact.email }}</span>{% endif %}
+    {% for l in contact.links %}<span>{{ l.url }}</span>{% endfor %}
+  </div>
+</header>
+<main>
+{% if summary %}<h2>Resumo</h2><p>{{ summary }}</p>{% endif %}
+{% if availability %}<p class="muted" style="margin-top:4px">{{ availability }}</p>{% endif %}
+
+{% if skills %}
+<h2>Competências</h2>
+<div class="chips">{% for s in skills %}<span class="chip">{{ s.name }}</span>{% endfor %}</div>
+{% endif %}
+
+{% if experiences %}
+<h2>Experiência</h2>
+{% for e in experiences %}
+<div class="item">
+  <div><span class="role">{{ e.role }}</span> · {{ e.company }}
+    <span class="muted">· {{ e.start }}{% if e.start %} – {% endif %}{{ e.end or "Atual" }}</span></div>
+  {% if e.highlights %}<ul>{% for h in e.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+<h2>Projetos</h2>
+{% for p in projects %}
+<div class="item"><span class="role">{{ p.name }}</span>{% if p.technologies %} <span class="muted">· {{ p.technologies|join(", ") }}</span>{% endif %}
+  {% if p.description %}<div>{{ p.description }}</div>{% endif %}
+  {% if p.url %}<div class="muted">{{ p.url }}</div>{% endif %}</div>
+{% endfor %}
+{% endif %}
+
+{% if education %}
+<h2>Formação</h2>
+{% for f in education %}<div class="item"><span class="role">{{ f.course }}</span> · {{ f.institution }}
+  <span class="muted">{{ f.start }}{% if f.start and f.end %} – {% endif %}{{ f.end }}</span></div>{% endfor %}
+{% endif %}
+
+{% if certifications %}
+<h2>Certificações</h2>
+<ul>{% for c in certifications %}<li>{{ c.name }}{% if c.issuer %} — {{ c.issuer }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if languages %}
+<h2>Idiomas</h2>
+{% for i in languages %}<div><span class="role">{{ i.name }}</span> <span class="muted">— {{ i.level }}</span></div>{% endfor %}
+{% endif %}
+</main>
+</body>
+</html>

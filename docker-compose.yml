@@ -1,0 +1,89 @@
+# Candidaturas — assistente self-hosted de candidaturas.
+#
+#   cp .env.example .env    # gere SECRET_KEY e POSTGRES_PASSWORD
+#   docker compose up -d --build
+#   abra http://localhost:8000
+#
+# Tudo roda na sua máquina: banco, API, worker (IA, PDFs, Telegram, e-mail) e interface.
+
+name: candidaturas
+
+x-app-env: &app-env
+  APP_ENV: production
+  DATABASE_URL: postgresql+psycopg://candidaturas:${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}@db:5432/candidaturas
+  SECRET_KEY: ${SECRET_KEY:?defina SECRET_KEY no .env (openssl rand -hex 32)}
+  PUBLIC_URL: ${PUBLIC_URL:-http://localhost:8000}
+  CORS_ORIGINS: "[]"
+  LOG_LEVEL: ${LOG_LEVEL:-INFO}
+  SOURCES_INTERVAL_MINUTES: ${SOURCES_INTERVAL_MINUTES:-60}
+  DATA_DIR: /data
+
+services:
+  db:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: candidaturas
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: candidaturas
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U candidaturas -d candidaturas"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  # Aplica as migrations e termina; API e worker só sobem depois.
+  migrate:
+    build: ./backend
+    image: candidaturas-backend:${APP_VERSION:-latest}
+    command: ["alembic", "upgrade", "head"]
+    environment: *app-env
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  api:
+    image: candidaturas-backend:${APP_VERSION:-latest}
+    restart: unless-stopped
+    environment: *app-env
+    volumes:
+      - appdata:/data
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  worker:
+    image: candidaturas-backend:${APP_VERSION:-latest}
+    command: ["python", "-m", "app.worker"]
+    restart: unless-stopped
+    environment: *app-env
+    volumes:
+      - appdata:/data
+    # O Chromium usa memória compartilhada para gerar os PDFs.
+    shm_size: 512m
+    healthcheck:
+      disable: true
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+
+  web:
+    build: ./frontend
+    image: candidaturas-web:${APP_VERSION:-latest}
+    restart: unless-stopped
+    environment:
+      API_UPSTREAM: api:8000
+    ports:
+      # Por padrão só este computador acessa. Para usar no celular pela rede de casa,
+      # troque para "8000:8080" (e mantenha uma senha forte).
+      - "${BIND_ADDRESS:-127.0.0.1}:${PORT:-8000}:8080"
+    depends_on:
+      api:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  appdata:

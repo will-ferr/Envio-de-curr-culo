@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>{{ contact.name }} — {{ headline }}</title>
+<style>
+  /* Template "Clássico": uma coluna, fonte padrão, sem ícones — lido sem problemas por ATS. */
+  @page { size: A4; margin: 14mm 16mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Arial, Helvetica, sans-serif; font-size: 10pt; color: #222; line-height: 1.38; margin: 0; }
+  header { text-align: center; margin-bottom: 8px; }
+  h1 { color: #1F5C99; font-size: 20pt; margin: 0; text-transform: uppercase; letter-spacing: .3px; }
+  .headline { font-style: italic; color: #555; font-size: 12pt; margin: 2px 0 4px; }
+  .contact { color: #555; font-size: 8.8pt; }
+  .contact span + span::before { content: "  |  "; white-space: pre; }
+  .availability { color: #555; font-size: 8.8pt; margin-top: 2px; }
+  h2 { color: #1F5C99; font-size: 11pt; text-transform: uppercase; margin: 12px 0 5px;
+       padding-bottom: 2px; border-bottom: 1.2px solid #1F5C99; break-after: avoid; }
+  p { margin: 0; text-align: justify; }
+  ul { margin: 3px 0 0; padding-left: 18px; }
+  li { margin-bottom: 2px; }
+  .row { margin-top: 2px; }
+  .muted { color: #666; }
+  .item { break-inside: avoid; }
+  .item + .item { margin-top: 6px; }
+  .skills { columns: 2; column-gap: 18px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>{{ contact.name }}</h1>
+  {% if headline %}<div class="headline">{{ headline }}</div>{% endif %}
+  <div class="contact">
+    {% if contact.location %}<span>{{ contact.location }}</span>{% endif %}
+    {% if contact.phone %}<span>{{ contact.phone }}</span>{% endif %}
+    {% if contact.email %}<span>{{ contact.email }}</span>{% endif %}
+    {% for l in contact.links %}<span>{{ l.url }}</span>{% endfor %}
+  </div>
+  {% if availability %}<div class="availability">{{ availability }}</div>{% endif %}
+</header>
+
+{% if summary %}<h2>Resumo Profissional</h2><p>{{ summary }}</p>{% endif %}
+
+{% if skills %}
+<h2>Competências</h2>
+<ul class="skills">{% for s in skills %}<li>{{ s.name }}{% if s.level %} <span class="muted">({{ s.level }})</span>{% endif %}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if experiences %}
+<h2>Experiência Profissional</h2>
+{% for e in experiences %}
+<div class="item">
+  <div class="row"><b>{{ e.role }} — {{ e.company }}</b>
+    <span class="muted">| {{ e.start }}{% if e.start %} – {% endif %}{{ e.end or "Atual" }}</span></div>
+  {% if e.highlights %}<ul>{% for h in e.highlights %}<li>{{ h }}</li>{% endfor %}</ul>{% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if projects %}
+<h2>Projetos</h2>
+<ul>{% for p in projects %}<li><b>{{ p.name }}</b>{% if p.description %}: {{ p.description }}{% endif %}
+  {% if p.url %}<span class="muted">— {{ p.url }}</span>{% endif %}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if education %}
+<h2>Formação</h2>
+{% for f in education %}
+<div class="row"><b>{{ f.course }}</b> <span class="muted">— {{ f.institution }}</span>
+  {% if f.start or f.end %}<span class="muted">| {{ f.start }}{% if f.start and f.end %} – {% endif %}{{ f.end }}</span>{% endif %}</div>
+{% endfor %}
+{% endif %}
+
+{% if certifications %}
+<h2>Certificações</h2>
+<ul>{% for c in certifications %}<li>{{ c.name }}{% if c.issuer %} — {{ c.issuer }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}</li>{% endfor %}</ul>
+{% endif %}
+
+{% if languages %}
+<h2>Idiomas</h2>
+{% for i in languages %}<div><b>{{ i.name }}:</b> <span class="muted">{{ i.level }}</span></div>{% endfor %}
+{% endif %}
+</body>
+</html>

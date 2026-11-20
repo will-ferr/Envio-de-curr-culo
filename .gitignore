@@ -1,0 +1,31 @@
+# Segredos e dados pessoais — nunca versionar
+.env
+.env.*
+!.env.example
+dados-pessoais/
+data/
+*.pdf
+!examples/**/*.pdf
+
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Node
+node_modules/
+frontend/dist/
+frontend/coverage/
+*.tsbuildinfo
+
+# Editores / SO
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.egg-info/

@@ -1,0 +1,62 @@
+{
+  "profile": {
+    "contact": {
+      "name": "Maria Exemplo",
+      "email": "maria.exemplo@example.com",
+      "phone": "(31) 90000-0000",
+      "location": "Belo Horizonte, MG",
+      "links": [{ "label": "GitHub", "url": "https://github.com/maria-exemplo" }]
+    },
+    "headline": "Desenvolvedora Back-end Júnior",
+    "summary": "Desenvolvedora em formação em Sistemas de Informação, com experiência em APIs REST com Python e FastAPI e banco de dados PostgreSQL.",
+    "availability": "CLT ou PJ · Remoto ou híbrido",
+    "experiences": [
+      {
+        "id": "exp00001",
+        "role": "Estagiária de Desenvolvimento",
+        "company": "Empresa Fictícia S.A.",
+        "start": "02/2025",
+        "end": "",
+        "location": "Belo Horizonte",
+        "highlights": [
+          "Desenvolvimento de endpoints REST com FastAPI e PostgreSQL.",
+          "Escrita de testes automatizados com pytest, elevando a cobertura do serviço de cadastros.",
+          "Participação em cerimônias Scrum e revisão de código no GitHub."
+        ]
+      }
+    ],
+    "education": [
+      { "id": "edu00001", "course": "Bacharelado em Sistemas de Informação", "institution": "Universidade Exemplo", "start": "2023", "end": "Previsão: 12/2026" }
+    ],
+    "skills": [
+      { "name": "Python", "category": "Linguagens", "level": "" },
+      { "name": "FastAPI", "category": "Back-end", "level": "" },
+      { "name": "PostgreSQL", "category": "Banco de dados", "level": "" },
+      { "name": "SQL", "category": "Banco de dados", "level": "" },
+      { "name": "Docker", "category": "Ferramentas", "level": "básico" },
+      { "name": "Git", "category": "Ferramentas", "level": "" },
+      { "name": "pytest", "category": "Testes", "level": "" },
+      { "name": "Scrum", "category": "Métodos", "level": "" }
+    ],
+    "projects": [
+      {
+        "id": "prj00001",
+        "name": "API de agendamentos",
+        "description": "API REST para agendamento de consultas, com autenticação JWT e testes automatizados.",
+        "url": "https://github.com/maria-exemplo/agendamentos",
+        "technologies": ["Python", "FastAPI", "PostgreSQL", "Docker"]
+      }
+    ],
+    "languages": [{ "name": "Inglês", "level": "Intermediário (leitura técnica)" }],
+    "certifications": []
+  },
+  "target_roles": [
+    {
+      "name": "Back-end Python",
+      "headline": "Desenvolvedora Back-end Python Júnior",
+      "summary": "Desenvolvedora com experiência em APIs REST com Python e FastAPI, testes automatizados e PostgreSQL.",
+      "skills_focus": ["Python", "FastAPI", "PostgreSQL"],
+      "keywords": ["python", "fastapi", "django", "flask"]
+    }
+  ]
+}
